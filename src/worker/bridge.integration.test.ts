@@ -96,4 +96,26 @@ describe('bridge.py', () => {
     const ok = await py.runPythonAsync('callable(overlay) and callable(residuals)');
     expect(ok).toBe(true);
   });
+
+  it('level switching works: reset survives itself and repeats (regression)', async () => {
+    // simulate the worker's ensureLevel sequence across three level switches
+    for (const cols of [
+      { t: [0, 1], y: [1, 2] },
+      { t: [0, 1, 2], y: [3, 4, 5] },
+      { t: [0], y: [9] },
+    ]) {
+      const reset = py.globals.get('_gt_reset_user_ns');
+      expect(typeof reset).toBe('function'); // was undefined after first reset (bug)
+      reset();
+      py.globals.get('_gt_set_data')(JSON.stringify(cols));
+      const n = await py.runPythonAsync('len(data)');
+      expect(n).toBe(cols.t.length);
+    }
+    // the whole bridge API must survive repeated resets
+    const ok = await py.runPythonAsync(
+      'all(callable(f) for f in (overlay, overlay_fn, residuals, plot_xy, shade, ' +
+        'clear_overlays, _gt_set_data, _gt_reset_user_ns, _gt_call_predict))',
+    );
+    expect(ok).toBe(true);
+  });
 });

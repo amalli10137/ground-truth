@@ -109,13 +109,11 @@ def _gt_set_data(columns_json: str):
     data = pd.DataFrame({k: np.asarray(v, dtype=float) for k, v in cols.items()})
 
 
-_GT_BASE = set(globals().keys()) | {"_GT_BASE"}
-
-
 def _gt_reset_user_ns():
+    """Clear player-defined globals on level switch, keeping the bridge itself."""
     g = globals()
     for k in list(g.keys()):
-        if k not in _GT_BASE:
+        if k not in _GT_BASE and not k.startswith("_gt_") and k != "_GT_BASE":
             del g[k]
 
 
@@ -133,3 +131,8 @@ def _gt_call_predict(t_json: str) -> str:
     if not np.all(np.isfinite(y)):
         raise ValueError("predict(t) returned non-finite values on the holdout grid")
     return json.dumps([float(v) for v in y])
+
+
+# Snapshot of the bridge namespace, taken AFTER every bridge definition —
+# everything added later (by player code) is fair game for the reset.
+_GT_BASE = set(globals().keys()) | {"_GT_BASE"}
