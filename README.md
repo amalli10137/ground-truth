@@ -14,15 +14,51 @@ on the observed data, watch the residuals, and submit when the noise looks like 
 | STOCHASTIC HORRORS | 13–19 | chaos vs noise, α-stable tails, jump-diffusion, Hurst exponents, HMM/Baum–Welch, Kalman, Hawkes |
 | QUANT GAUNTLET | 20–23 | cointegration, random matrix theory, multiple-testing, distributional forecasting (final boss) |
 
-## Run it
+## Getting started
+
+### What you need
+
+- **[Node.js](https://nodejs.org) 18 or newer** (comes with `npm`) — check with `node --version`
+- **[git](https://git-scm.com)** to download the repo
+- A modern browser (Chrome, Firefox, Safari, Edge)
+- An **internet connection on first play** — the code lab downloads the Python runtime
+  (Pyodide + numpy/scipy/pandas, ~40 MB) from a CDN the first time you click "Run".
+  Your browser caches it, so later sessions work much faster.
+
+You do **not** need Python installed to play — the game runs Python entirely in your
+browser. (Python is only needed if you want to regenerate the level data; see below.)
+
+### Download
 
 ```bash
-npm install
-npm run dev        # level packs are committed in public/levels/
+git clone https://github.com/amalli10137/ground-truth.git
+cd ground-truth
 ```
 
-The first "Run" in the code lab boots Pyodide from CDN (~40 MB of numpy/scipy/pandas,
-first time only — cached by the browser after that).
+(Or click **Code → Download ZIP** on GitHub and unzip it, then `cd` into the folder.)
+
+### Install and run
+
+```bash
+npm install        # one time: installs dependencies (~1 min)
+npm run dev        # starts the game
+```
+
+Then open **http://localhost:5173** in your browser. That's it — all 23 levels are
+included in the repo (`public/levels/`), so there's nothing else to generate.
+
+Your progress, code drafts, and hint usage are saved in the browser's localStorage,
+so they survive reloads and restarts (per browser, per machine).
+
+### Production build (optional)
+
+```bash
+npm run build      # outputs a static site to dist/
+npm run preview    # serves it at http://localhost:4173
+```
+
+The `dist/` folder is a fully static site — it can be hosted on GitHub Pages,
+Netlify, Vercel, or any static file server.
 
 ## Regenerating level data
 
